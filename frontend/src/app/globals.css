@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --lavender: #e8dfff;
+  --lilac: #b9a0f5;
+  --violet: #7951db;
+  --plum: #30204e;
+  --white-lilac: #fbf9ff;
+}
+
+@theme inline {
+  --color-background: var(--white-lilac);
+  --color-foreground: var(--plum);
+  --font-sans: var(--font-plus-jakarta);
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--white-lilac);
+  color: var(--plum);
+  font-family: Arial, sans-serif;
+}
+::selection {
+  background: var(--lilac);
+  color: var(--plum);
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-3deg);
+  }
+  50% {
+    transform: translate3d(14px, -12px, 0) rotate(4deg);
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+@keyframes pulse-soft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+.animate-drift {
+  animation: drift 7s ease-in-out infinite;
+}
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+.marquee-track {
+  animation: marquee 22s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+.container-wide {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: scale(1.08) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+.hero-slide {
+  animation: hero-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise-in {
+  animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (min-width: 768px) {
+  .container-wide {
+    width: min(1180px, calc(100% - 5rem));
+  }
+}
+@media (max-width: 640px) {
+  .marquee-track {
+    animation-duration: 14s;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+body {
+  overflow-x: hidden;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
