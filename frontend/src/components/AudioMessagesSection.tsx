@@ -59,7 +59,7 @@ export default async function AudioMessagesSection() {
             {audios.map((audio, index) => (
               <article
                 key={`${audio.title}-${index}`}
-                className="group relative isolate overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 transition duration-500 hover:-translate-y-2 hover:border-[#BA83E8]/40 hover:bg-white/[0.075] hover:shadow-2xl hover:shadow-[#7045B4]/10 sm:p-6"
+                className="blast-pulse-slow group relative isolate overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 transition duration-500 hover:-translate-y-2 hover:border-[#BA83E8]/40 hover:bg-white/[0.075] hover:shadow-2xl hover:shadow-[#7045B4]/10 sm:p-6"
               >
                 <div className="pointer-events-none absolute -right-12 -top-12 -z-10 size-36 rounded-full bg-[#7045B4]/20 blur-3xl transition duration-500 group-hover:bg-[#BA83E8]/30" />
 

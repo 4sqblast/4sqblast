@@ -111,7 +111,7 @@ export default async function MinistriesPage() {
               return (
                 <article
                   key={`${ministry.title}-${index}`}
-                  className={`blast-ministry-card ${entrance} group relative isolate overflow-hidden rounded-[2rem] ${theme.card} shadow-lg shadow-[#30204F]/[0.06] transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#30204F]/15 ${
+                  className={`blast-pulse blast-ministry-card ${entrance} group relative isolate overflow-hidden rounded-[2rem] ${theme.card} shadow-lg shadow-[#30204F]/[0.06] transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#30204F]/15 ${
                     index % 3 === 1 ? "lg:translate-y-10" : ""
                   }`}
                   style={{ animationDelay: `${index * 130}ms` }}

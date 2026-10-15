@@ -1,15 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Heart,
-  Menu,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, Heart, Menu, X } from "lucide-react";
 
 const links = [
   { label: "Home", href: "/" },
@@ -34,7 +28,7 @@ export default function Navbar() {
       <div className="relative mx-auto max-w-7xl">
         <div className="flex items-center justify-between gap-3 rounded-full border border-white/75 bg-white/85 px-3 py-2 shadow-[0_12px_45px_rgba(48,32,78,0.12)] backdrop-blur-2xl transition-shadow duration-300 hover:shadow-[0_16px_55px_rgba(48,32,78,0.16)] sm:px-5 sm:py-2.5">
           {/* Logo carries the brand name, so no duplicate wordmark */}
-          <a
+          <Link
             href="/"
             aria-label="BLAST Church home"
             onClick={() => setOpen(false)}
@@ -59,20 +53,20 @@ export default function Navbar() {
                 Believers Living And Succeeding Together
               </span>
             </span>
-          </a>
+          </Link>
 
           <nav
             aria-label="Main navigation"
             className="hidden items-center gap-1 md:flex"
           >
             {links.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="rounded-full px-4 py-2.5 text-sm font-bold text-[#30204F]/75 transition duration-200 hover:bg-[#F0E7FF] hover:text-[#7045B4]"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -141,7 +135,7 @@ export default function Navbar() {
 
             <nav aria-label="Mobile navigation" className="mt-3 space-y-1">
               {links.map((link, index) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
@@ -157,7 +151,7 @@ export default function Navbar() {
                     size={17}
                     className="text-[#8B51C1] transition-transform group-hover:translate-x-1"
                   />
-                </a>
+                </Link>
               ))}
             </nav>
 
