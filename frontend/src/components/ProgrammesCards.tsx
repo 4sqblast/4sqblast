@@ -1,6 +1,12 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useAnimationControls,
+  useInView,
+} from "framer-motion";
 import { ArrowUpRight, CalendarDays, Clock3, Sparkles } from "lucide-react";
 
 type Programme = {
@@ -11,6 +17,14 @@ type Programme = {
 
 type Props = {
   programmes: Programme[];
+};
+
+type CardPose = {
+  index: number;
+  huddleX: number;
+  huddleY: number;
+  startX: number;
+  startY: number;
 };
 
 const themes = [
@@ -44,54 +58,291 @@ const themes = [
   },
 ];
 
-const entranceVariants = [
-  { x: -110, y: 25, rotate: -10, scale: 0.75 },
-  { x: 110, y: 35, rotate: 10, scale: 0.75 },
-  { x: -35, y: 110, rotate: -7, scale: 0.8 },
-  { x: 35, y: -100, rotate: 7, scale: 0.8 },
+// Each card has its own movement during the chaotic huddle.
+const chaosA = [
+  { x: -42, y: -30, rotate: -13 },
+  { x: 35, y: -25, rotate: 15 },
+  { x: -28, y: 30, rotate: 11 },
+  { x: 40, y: 28, rotate: -14 },
 ];
+
+const chaosB = [
+  { x: 35, y: 24, rotate: 16 },
+  { x: -40, y: 30, rotate: -18 },
+  { x: 38, y: -32, rotate: -12 },
+  { x: -35, y: -28, rotate: 19 },
+];
+
+const chaosC = [
+  { x: -24, y: 34, rotate: -18 },
+  { x: 28, y: -35, rotate: 20 },
+  { x: 42, y: 20, rotate: 15 },
+  { x: -42, y: -18, rotate: -20 },
+];
+
+const huddleVariants = {
+  initial: (pose: CardPose) => ({
+    x: pose.huddleX + pose.startX,
+    y: pose.huddleY + pose.startY,
+    rotate: pose.index % 2 === 0 ? -18 : 18,
+    scale: 0.82,
+    opacity: 0,
+    filter: "blur(7px)",
+  }),
+
+  // Everyone rushes into a close, but imperfect, huddle.
+  huddle: (pose: CardPose) => ({
+    x: pose.huddleX,
+    y: pose.huddleY,
+    rotate: pose.index % 2 === 0 ? -8 : 8,
+    scale: 0.91,
+    opacity: 1,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.75,
+      ease: "easeOut" as const,
+    },
+  }),
+
+  // They start nudging and bumping into one another.
+  chaosA: (pose: CardPose) => ({
+    x: pose.huddleX + chaosA[pose.index % 4].x,
+    y: pose.huddleY + chaosA[pose.index % 4].y,
+    rotate: chaosA[pose.index % 4].rotate,
+    scale: pose.index % 2 === 0 ? 0.94 : 0.87,
+    opacity: 1,
+    transition: {
+      duration: 0.7,
+      ease: "easeInOut" as const,
+    },
+  }),
+
+  // They shuffle around, trying to make room.
+  chaosB: (pose: CardPose) => ({
+    x: pose.huddleX + chaosB[pose.index % 4].x,
+    y: pose.huddleY + chaosB[pose.index % 4].y,
+    rotate: chaosB[pose.index % 4].rotate,
+    scale: pose.index % 2 === 0 ? 0.86 : 0.95,
+    opacity: 1,
+    transition: {
+      duration: 0.72,
+      ease: "easeInOut" as const,
+    },
+  }),
+
+  // One final, disorderly adjustment before they get caught.
+  chaosC: (pose: CardPose) => ({
+    x: pose.huddleX + chaosC[pose.index % 4].x,
+    y: pose.huddleY + chaosC[pose.index % 4].y,
+    rotate: chaosC[pose.index % 4].rotate,
+    scale: 0.9,
+    opacity: 1,
+    transition: {
+      duration: 0.65,
+      ease: "easeInOut" as const,
+    },
+  }),
+
+  // FREEZE! They have noticed someone watching.
+  caught: (pose: CardPose) => ({
+    x: pose.huddleX + chaosC[pose.index % 4].x,
+    y: pose.huddleY + chaosC[pose.index % 4].y,
+    rotate: chaosC[pose.index % 4].rotate * 0.65,
+    scale: 0.91,
+    opacity: 1,
+    transition: {
+      duration: 0.12,
+      ease: "linear" as const,
+    },
+  }),
+
+  // Panic! They attempt to return to their original positions.
+  scramble: (pose: CardPose) => ({
+    x: pose.huddleX * 0.3,
+    y: pose.huddleY * 0.3,
+    rotate: pose.index % 2 === 0 ? -5 : 5,
+    scale: 0.97,
+    opacity: 1,
+    transition: {
+      duration: 0.42,
+      ease: "easeIn" as const,
+    },
+  }),
+
+  // They land back in the correct grid positions.
+  settle: (pose: CardPose) => ({
+    x: 0,
+    y: 0,
+    rotate: 0,
+    scale: 1,
+    opacity: 1,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring" as const,
+      stiffness: 150,
+      damping: 12,
+      mass: 0.75,
+      delay: pose.index * 0.055,
+    },
+  }),
+};
+
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export default function ProgrammeCards({ programmes }: Props) {
   const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const controls = useAnimationControls();
+  const [poses, setPoses] = useState<CardPose[]>([]);
+
+  const isInView = useInView(sectionRef, {
+    once: true,
+    amount: 0.15,
+  });
+
+  useEffect(() => {
+    if (!programmes?.length || !isInView) return;
+
+    if (reduceMotion) {
+      controls.set("settle");
+      return;
+    }
+
+    let cancelled = false;
+
+    const playEntrance = async () => {
+      const grid = sectionRef.current;
+
+      if (!grid) return;
+
+      const gridRect = grid.getBoundingClientRect();
+
+      // Use the actual grid centre, regardless of screen size.
+      const centreX = gridRect.left + gridRect.width / 2;
+      const centreY = gridRect.top + gridRect.height / 2;
+
+      // Keep the huddle slightly uneven so the cards feel alive.
+      const clusterOffsets = [
+        { x: -32, y: -24 },
+        { x: 35, y: -18 },
+        { x: -24, y: 26 },
+        { x: 30, y: 28 },
+      ];
+
+      const nextPoses: CardPose[] = [];
+
+      cardRefs.current.forEach((card, index) => {
+        if (!card) return;
+
+        const rect = card.getBoundingClientRect();
+        const cardCentreX = rect.left + rect.width / 2;
+        const cardCentreY = rect.top + rect.height / 2;
+        const offset = clusterOffsets[index % 4];
+
+        // Move each card towards the common huddle point.
+        // This also makes the animation work on mobile, where
+        // the cards are stacked vertically rather than in a row.
+        const huddleX = centreX - cardCentreX + offset.x;
+        const huddleY = centreY - cardCentreY + offset.y;
+
+        const starts = [
+          { x: -90, y: -75 },
+          { x: 90, y: -65 },
+          { x: -75, y: 80 },
+          { x: 80, y: 75 },
+        ];
+
+        nextPoses.push({
+          index,
+          huddleX,
+          huddleY,
+          startX: starts[index % 4].x,
+          startY: starts[index % 4].y,
+        });
+      });
+
+      if (cancelled) return;
+
+      setPoses(nextPoses);
+
+      // Let React apply the measured poses before starting.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+
+      if (cancelled) return;
+
+      // 1. Sneak into the huddle.
+      await controls.start("huddle");
+      if (cancelled) return;
+      await wait(250);
+
+      // 2. Bump and shuffle around.
+      await controls.start("chaosA");
+      if (cancelled) return;
+      await wait(180);
+
+      await controls.start("chaosB");
+      if (cancelled) return;
+      await wait(220);
+
+      await controls.start("chaosC");
+      if (cancelled) return;
+      await wait(350);
+
+      // 3. They suddenly realise they have been spotted.
+      await controls.start("caught");
+      if (cancelled) return;
+
+      // Hold the awkward freeze so the joke actually lands.
+      await wait(1000);
+      if (cancelled) return;
+
+      // 4. Everyone scrambles back to their own place.
+      await controls.start("scramble");
+      if (cancelled) return;
+
+      await controls.start("settle");
+    };
+
+    void playEntrance();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isInView, reduceMotion, controls, programmes]);
 
   if (!programmes?.length) {
     return null;
   }
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div ref={sectionRef} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {programmes.map((programme, i) => {
         const theme = themes[i % themes.length];
-        const entrance = entranceVariants[i % entranceVariants.length];
+        const pose = poses[i] ?? {
+          index: i,
+          huddleX: 0,
+          huddleY: 0,
+          startX: 0,
+          startY: 0,
+        };
 
         return (
           <motion.div
             key={`${programme.title}-${i}`}
-            className="h-full"
-            initial={
-              reduceMotion
-                ? false
-                : {
-                    opacity: 0,
-                    ...entrance,
-                    filter: "blur(10px)",
-                  }
-            }
-            animate={{
-              opacity: 1,
-              x: 0,
-              y: 0,
-              rotate: 0,
-              scale: 1,
-              filter: "blur(0px)",
+            ref={(element) => {
+              cardRefs.current[i] = element;
             }}
-            transition={{
-              duration: reduceMotion ? 0 : 1,
-              delay: reduceMotion ? 0 : i * 0.18,
-              ease: [0.16, 1, 0.3, 1],
-            }}
+            className="relative h-full"
+            custom={pose}
+            variants={huddleVariants}
+            initial={reduceMotion ? "settle" : "initial"}
+            animate={controls}
+            style={{ transformOrigin: "center center" }}
           >
-            {/* The inner card handles its own pulse, independently */}
             <motion.article
               className={`group relative isolate flex h-full min-h-[300px] flex-col justify-between overflow-hidden rounded-[2rem] border p-6 shadow-lg shadow-black/10 sm:min-h-[320px] ${theme.border} ${theme.card}`}
               animate={
@@ -104,7 +355,7 @@ export default function ProgrammeCards({ programmes }: Props) {
               }
               transition={{
                 duration: 2.8,
-                delay: 1.2 + i * 0.2,
+                delay: 6.2 + i * 0.2,
                 repeat: Infinity,
                 repeatDelay: 0.25,
                 ease: "easeInOut",
