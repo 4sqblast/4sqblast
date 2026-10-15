@@ -51,11 +51,14 @@ const themes = [
   },
 ];
 
+// A different entrance style from the Programmes cards
 const entrances = [
-  { x: -55, y: 30, rotate: -3 },
-  { x: 55, y: 30, rotate: 3 },
-  { x: -55, y: 30, rotate: -3 },
+  { y: 75, rotate: -5, scale: 0.88 },
+  { y: 95, rotate: 4, scale: 0.9 },
+  { y: 65, rotate: -3, scale: 0.86 },
 ];
+
+const pulseClasses = ["blast-pulse", "blast-pulse-slow", "blast-pulse-delayed"];
 
 export default function GiveCards({ accounts }: GiveCardsProps) {
   const reduceMotion = useReducedMotion();
@@ -79,120 +82,142 @@ export default function GiveCards({ accounts }: GiveCardsProps) {
         const isCopied = copied === account.accountNumber;
 
         return (
-          <motion.article
+          <div
             key={`${account.name}-${i}`}
-            initial={
-              reduceMotion
-                ? false
-                : {
-                    opacity: 0,
-                    x: entrance.x,
-                    y: entrance.y,
-                    rotate: entrance.rotate,
-                  }
-            }
-            whileInView={{
-              opacity: 1,
-              x: 0,
-              y: 0,
-              rotate: 0,
-            }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{
-              duration: 0.75,
-              delay: reduceMotion ? 0 : (i % 3) * 0.12,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            whileHover={
-              reduceMotion ? undefined : { y: -7, rotate: i % 2 ? -1 : 1 }
-            }
-            className={`group relative isolate flex min-h-[310px] flex-col overflow-hidden rounded-[2rem] border border-white/30 bg-gradient-to-br ${theme.card} p-6 shadow-xl shadow-[#30204F]/10 sm:min-h-[335px] sm:p-7`}
+            className={`h-full ${
+              reduceMotion ? "" : pulseClasses[i % pulseClasses.length]
+            }`}
           >
-            {/* Ambient glow and decorative orbit */}
-            <div
-              className={`pointer-events-none absolute -right-16 -top-16 -z-10 size-56 rounded-full blur-3xl transition-transform duration-700 group-hover:scale-125 ${theme.orb}`}
-            />
-
-            <div className="pointer-events-none absolute -right-12 top-16 -z-10 size-48 rounded-full border border-current/15" />
-            <div className="pointer-events-none absolute -right-5 top-24 -z-10 size-32 rounded-full border border-current/15" />
-            <div className="pointer-events-none absolute -bottom-16 -left-10 -z-10 size-40 rounded-full bg-black/[0.04] blur-2xl" />
-
-            <span className="pointer-events-none absolute -right-2 bottom-12 -z-10 select-none text-[9rem] font-black leading-none tracking-tighter opacity-[0.07]">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-
-            {/* Card header */}
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`grid size-12 place-items-center rounded-2xl border backdrop-blur-md ${theme.label}`}
-                >
-                  {i === 0 ? (
-                    <Heart size={21} strokeWidth={1.7} />
-                  ) : i === 1 ? (
-                    <Sparkles size={21} strokeWidth={1.7} />
-                  ) : (
-                    <Landmark size={21} strokeWidth={1.7} />
-                  )}
-                </span>
-
-                <div>
-                  <p className={`text-[9px] font-black tracking-[0.2em] ${theme.accent}`}>
-                    {theme.tag}
-                  </p>
-                  <p className={`mt-1 text-xs font-semibold ${theme.muted}`}>
-                    Giving account · {String(i + 1).padStart(2, "0")}
-                  </p>
-                </div>
-              </div>
-
-              <span
-                className={`grid size-9 shrink-0 place-items-center rounded-full border backdrop-blur-sm transition duration-300 group-hover:rotate-45 ${theme.label}`}
-              >
-                <ArrowUpRight size={17} />
-              </span>
-            </div>
-
-            {/* Account details */}
-            <div className="relative mt-auto pt-12">
-              <h3 className={`max-w-[18rem] text-xl font-black leading-tight tracking-tight sm:text-2xl ${theme.text}`}>
-                {account.name}
-              </h3>
-
-              <div className={`mt-5 rounded-2xl border p-4 backdrop-blur-md ${theme.label}`}>
-                <p className={`mb-2 text-[9px] font-black uppercase tracking-[0.18em] ${theme.muted}`}>
-                  Account number
-                </p>
-
-                <div className="flex items-center justify-between gap-3">
-                  <p className={`min-w-0 break-all font-mono text-xl font-black tracking-wider sm:text-2xl ${theme.text}`}>
-                    {account.accountNumber}
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={() => copyAccountNumber(account.accountNumber)}
-                    aria-label={
-                      isCopied ? "Account number copied" : "Copy account number"
+            <motion.article
+              initial={
+                reduceMotion
+                  ? false
+                  : {
+                      opacity: 0,
+                      y: entrance.y,
+                      rotate: entrance.rotate,
+                      scale: entrance.scale,
                     }
-                    className={`grid size-10 shrink-0 place-items-center rounded-xl border border-current/15 transition duration-200 hover:scale-105 active:scale-95 ${theme.text}`}
+              }
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                rotate: 0,
+                scale: 1,
+              }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{
+                duration: 0.9,
+                delay: reduceMotion ? 0 : (i % 3) * 0.16,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              whileHover={
+                reduceMotion ? undefined : { y: -7, rotate: i % 2 ? -1 : 1 }
+              }
+              className={`group relative isolate flex min-h-[310px] h-full flex-col overflow-hidden rounded-[2rem] border border-white/30 bg-gradient-to-br ${theme.card} p-6 shadow-xl shadow-[#30204F]/10 sm:min-h-[335px] sm:p-7`}
+            >
+              {/* Ambient glow and decorative orbit */}
+              <div
+                className={`pointer-events-none absolute -right-16 -top-16 -z-10 size-56 rounded-full blur-3xl transition-transform duration-700 group-hover:scale-125 ${theme.orb}`}
+              />
+
+              <div className="pointer-events-none absolute -right-12 top-16 -z-10 size-48 rounded-full border border-current/15" />
+              <div className="pointer-events-none absolute -right-5 top-24 -z-10 size-32 rounded-full border border-current/15" />
+              <div className="pointer-events-none absolute -bottom-16 -left-10 -z-10 size-40 rounded-full bg-black/[0.04] blur-2xl" />
+
+              <span className="pointer-events-none absolute -right-2 bottom-12 -z-10 select-none text-[9rem] font-black leading-none tracking-tighter opacity-[0.07]">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+
+              {/* Card header */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`grid size-12 place-items-center rounded-2xl border backdrop-blur-md ${theme.label}`}
                   >
-                    {isCopied ? <Check size={17} /> : <Copy size={17} />}
-                  </button>
+                    {i === 0 ? (
+                      <Heart size={21} strokeWidth={1.7} />
+                    ) : i === 1 ? (
+                      <Sparkles size={21} strokeWidth={1.7} />
+                    ) : (
+                      <Landmark size={21} strokeWidth={1.7} />
+                    )}
+                  </span>
+
+                  <div>
+                    <p
+                      className={`text-[9px] font-black tracking-[0.2em] ${theme.accent}`}
+                    >
+                      {theme.tag}
+                    </p>
+                    <p className={`mt-1 text-xs font-semibold ${theme.muted}`}>
+                      Giving account · {String(i + 1).padStart(2, "0")}
+                    </p>
+                  </div>
                 </div>
 
-                <div className={`mt-3 flex items-center justify-between gap-2 border-t border-current/15 pt-3 text-xs ${theme.muted}`}>
-                  <span className="truncate font-semibold">{account.bank}</span>
-                  <span className="shrink-0">
-                    {isCopied ? "Copied!" : "Tap to copy"}
-                  </span>
+                <span
+                  className={`grid size-9 shrink-0 place-items-center rounded-full border backdrop-blur-sm transition duration-300 group-hover:rotate-45 ${theme.label}`}
+                >
+                  <ArrowUpRight size={17} />
+                </span>
+              </div>
+
+              {/* Account details */}
+              <div className="relative mt-auto pt-12">
+                <h3
+                  className={`max-w-[18rem] text-xl font-black leading-tight tracking-tight sm:text-2xl ${theme.text}`}
+                >
+                  {account.name}
+                </h3>
+
+                <div
+                  className={`mt-5 rounded-2xl border p-4 backdrop-blur-md ${theme.label}`}
+                >
+                  <p
+                    className={`mb-2 text-[9px] font-black uppercase tracking-[0.18em] ${theme.muted}`}
+                  >
+                    Account number
+                  </p>
+
+                  <div className="flex items-center justify-between gap-3">
+                    <p
+                      className={`min-w-0 break-all font-mono text-xl font-black tracking-wider sm:text-2xl ${theme.text}`}
+                    >
+                      {account.accountNumber}
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={() => copyAccountNumber(account.accountNumber)}
+                      aria-label={
+                        isCopied
+                          ? "Account number copied"
+                          : "Copy account number"
+                      }
+                      className={`grid size-10 shrink-0 place-items-center rounded-xl border border-current/15 transition duration-200 hover:scale-105 active:scale-95 ${theme.text}`}
+                    >
+                      {isCopied ? <Check size={17} /> : <Copy size={17} />}
+                    </button>
+                  </div>
+
+                  <div
+                    className={`mt-3 flex items-center justify-between gap-2 border-t border-current/15 pt-3 text-xs ${theme.muted}`}
+                  >
+                    <span className="truncate font-semibold">
+                      {account.bank}
+                    </span>
+                    <span className="shrink-0">
+                      {isCopied ? "Copied!" : "Tap to copy"}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Decorative bottom highlight */}
-            <div className="pointer-events-none absolute bottom-0 left-7 right-7 h-1 origin-left scale-x-0 rounded-full bg-current/50 transition-transform duration-500 group-hover:scale-x-100" />
-          </motion.article>
+              {/* Decorative bottom highlight */}
+              <div className="pointer-events-none absolute bottom-0 left-7 right-7 h-1 origin-left scale-x-0 rounded-full bg-current/50 transition-transform duration-500 group-hover:scale-x-100" />
+            </motion.article>
+          </div>
         );
       })}
     </div>

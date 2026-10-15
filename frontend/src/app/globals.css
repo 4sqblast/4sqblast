@@ -143,3 +143,43 @@ button,
 a {
   -webkit-tap-highlight-color: transparent;
 }
+
+
+/* Endless, gentle card pulsing */
+@keyframes blast-card-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.035);
+  }
+}
+
+.blast-pulse {
+  animation: blast-card-pulse 3.2s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* Respect accessibility preferences */
+@media (prefers-reduced-motion: reduce) {
+  .blast-pulse {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+.blast-pulse-slow {
+  animation: blast-card-pulse 4.2s ease-in-out infinite;
+}
+
+.blast-pulse-fast {
+  animation: blast-card-pulse 2.7s ease-in-out infinite;
+}
+
+.blast-pulse-delayed {
+  animation: blast-card-pulse 3.4s ease-in-out infinite;
+  animation-delay: -1.4s;
+}

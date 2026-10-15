@@ -63,6 +63,17 @@ export default function ProgrammeCards({ programmes }: Props) {
         return (
           <motion.article
             key={`${programme.title}-${i}`}
+            className={
+              reduceMotion
+                ? "h-full"
+                : `h-full ${
+                    i % 3 === 0
+                      ? "blast-pulse"
+                      : i % 3 === 1
+                        ? "blast-pulse-slow"
+                        : "blast-pulse-delayed"
+                  }  group relative isolate flex min-h-[285px] flex-col justify-between overflow-hidden rounded-[2rem] border ${theme.border} ${theme.card} p-6 shadow-lg shadow-black/5 sm:min-h-[300px]`
+            }
             initial={
               reduceMotion
                 ? false
@@ -86,11 +97,8 @@ export default function ProgrammeCards({ programmes }: Props) {
               ease: [0.22, 1, 0.36, 1],
             }}
             whileHover={
-              reduceMotion
-                ? undefined
-                : { y: -7, rotate: i % 2 === 0 ? 1 : -1 }
+              reduceMotion ? undefined : { y: -7, rotate: i % 2 === 0 ? 1 : -1 }
             }
-            className={`group relative isolate flex min-h-[285px] flex-col justify-between overflow-hidden rounded-[2rem] border ${theme.border} ${theme.card} p-6 shadow-lg shadow-black/5 sm:min-h-[300px]`}
           >
             {/* Decorative background elements */}
             <div
@@ -118,7 +126,9 @@ export default function ProgrammeCards({ programmes }: Props) {
 
             {/* Card content */}
             <div className="relative mt-10">
-              <p className={`mb-3 text-[9px] font-black tracking-[0.2em] ${theme.accent}`}>
+              <p
+                className={`mb-3 text-[9px] font-black tracking-[0.2em] ${theme.accent}`}
+              >
                 {theme.tag}
               </p>
 
