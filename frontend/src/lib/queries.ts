@@ -1,4 +1,4 @@
-import { gql, GraphQLClient } from "graphql-request";
+import { ClientError, gql, GraphQLClient } from "graphql-request";
 import type {
   HeroCarousel,
   Programmes,
@@ -8,11 +8,65 @@ import type {
   Fathers,
   Ministries,
   GrowthGroups,
-
 } from "./types";
 
-const baseUrl = process.env.WORDPRESS_URL;
-const client = new GraphQLClient(`${baseUrl}/graphql`);
+const baseUrl = process.env.WORDPRESS_URL?.trim();
+
+if (!baseUrl) {
+  throw new Error(
+    "WORDPRESS_URL is not configured. Check your .env.local and deployment environment variables.",
+  );
+}
+
+const endpoint = `${baseUrl.replace(/\/+$/, "").replace(/\/graphql$/i, "")}/graphql`;
+
+const client = new GraphQLClient(endpoint);
+
+/**
+ * Retry temporary WordPress/server failures without hiding
+ * GraphQL errors, configuration errors, or other permanent failures.
+ */
+async function requestWithRetry<T>(
+  query: string,
+  operationName: string,
+  maxAttempts = 3,
+): Promise<T> {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await client.request<T>(query);
+    } catch (error: unknown) {
+      const status =
+        error instanceof ClientError ? error.response.status : undefined;
+
+      const isTemporaryServerError =
+        status !== undefined && [502, 503, 504].includes(status);
+
+      if (!isTemporaryServerError || attempt === maxAttempts) {
+        console.error(
+          `[WPGraphQL] ${operationName} failed on attempt ${attempt}/${maxAttempts}.`,
+          error,
+        );
+
+        throw error;
+      }
+
+      const delay = 1000 * 2 ** (attempt - 1);
+
+      console.warn(
+        `[WPGraphQL] ${operationName} returned HTTP ${status}. ` +
+          `Retrying in ${delay}ms (attempt ${attempt + 1}/${maxAttempts}).`,
+      );
+
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, delay);
+      });
+    }
+  }
+
+  throw new Error(
+    `[WPGraphQL] ${operationName} failed after ${maxAttempts} attempts.`,
+  );
+}
 
 export function getHeroImages(): Promise<HeroCarousel> {
   const query = gql`
@@ -62,7 +116,7 @@ export function getHeroImages(): Promise<HeroCarousel> {
     }
   `;
 
-  return client.request<HeroCarousel>(query);
+  return requestWithRetry<HeroCarousel>(query, "GetHeroImages");
 }
 
 export function getProgrammes(): Promise<Programmes> {
@@ -97,7 +151,7 @@ export function getProgrammes(): Promise<Programmes> {
     }
   `;
 
-  return client.request<Programmes>(query);
+  return requestWithRetry<Programmes>(query, "GetProgrammes");
 }
 
 export function getAccounts(): Promise<Accounts> {
@@ -127,7 +181,7 @@ export function getAccounts(): Promise<Accounts> {
     }
   `;
 
-  return client.request<Accounts>(query);
+  return requestWithRetry<Accounts>(query, "GetAccounts");
 }
 
 export function getSermons(): Promise<YoutubeSermons> {
@@ -157,7 +211,7 @@ export function getSermons(): Promise<YoutubeSermons> {
     }
   `;
 
-  return client.request<YoutubeSermons>(query);
+  return requestWithRetry<YoutubeSermons>(query, "GetYoutubeSermons");
 }
 
 export function getAudioMessages(): Promise<AudioMessages> {
@@ -208,7 +262,7 @@ export function getAudioMessages(): Promise<AudioMessages> {
     }
   `;
 
-  return client.request<AudioMessages>(query);
+  return requestWithRetry<AudioMessages>(query, "GetAudioMessages");
 }
 
 export function getFathers(): Promise<Fathers> {
@@ -253,7 +307,7 @@ export function getFathers(): Promise<Fathers> {
     }
   `;
 
-  return client.request<Fathers>(query);
+  return requestWithRetry<Fathers>(query, "GetFathers");
 }
 
 export function getMinistries(): Promise<Ministries> {
@@ -340,7 +394,7 @@ export function getMinistries(): Promise<Ministries> {
     }
   `;
 
-  return client.request<Ministries>(query);
+  return requestWithRetry<Ministries>(query, "GetMinistries");
 }
 
 export function getGrowthGroups(): Promise<GrowthGroups> {
@@ -393,5 +447,5 @@ export function getGrowthGroups(): Promise<GrowthGroups> {
     }
   `;
 
-  return client.request<GrowthGroups>(query);
+  return requestWithRetry<GrowthGroups>(query, "GetGrowthGroups");
 }
