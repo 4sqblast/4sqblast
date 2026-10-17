@@ -57,7 +57,7 @@ export default function DifferenceText() {
         viewBox="0 0 1000 250"
         role="img"
         aria-labelledby="difference-title"
-        className="relative z-10 block h-auto w-full min-w-0 overflow-visible"
+        className="blast-pulse-slow relative z-10 block h-auto w-full min-w-0 overflow-visible"
       >
         <title id="difference-title">Difference</title>
 
