@@ -31,7 +31,7 @@ export default function DifferenceText() {
 
   return (
     <div
-      className="relative mx-auto w-full max-w-[850px] overflow-visible"
+      className="relative mx-auto w-full max-w-[850px] min-w-0 overflow-visible"
       aria-label="Difference"
     >
       {/* Subtle animated red background glow */}
@@ -57,7 +57,7 @@ export default function DifferenceText() {
         viewBox="0 0 1000 250"
         role="img"
         aria-labelledby="difference-title"
-        className="relative z-10 block h-auto w-full overflow-visible"
+        className="relative z-10 block h-auto w-full min-w-0 overflow-visible"
       >
         <title id="difference-title">Difference</title>
 
@@ -182,8 +182,7 @@ export default function DifferenceText() {
                   scale: 1.5,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: -3, scale: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: -3, scale: 1 }}
           transition={letterTransition(0)}
           style={{ transformOrigin: "155px 120px" }}
         >
@@ -225,8 +224,7 @@ export default function DifferenceText() {
                   scaleY: 1.7,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: -1, scaleY: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: -1, scale: 1 }}
           transition={letterTransition(1)}
           style={{ transformOrigin: "211px 120px" }}
         >
@@ -261,8 +259,7 @@ export default function DifferenceText() {
                   scale: 1.6,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
           transition={letterTransition(2)}
           style={{ transformOrigin: "275px 120px" }}
         >
@@ -291,8 +288,7 @@ export default function DifferenceText() {
                   scale: 1.6,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: -4, scale: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: -4, scale: 1 }}
           transition={letterTransition(3)}
           style={{ transformOrigin: "364px 122px" }}
         >
@@ -329,8 +325,7 @@ export default function DifferenceText() {
                   scaleY: 1.5,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: -1, scaleY: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: -1, scale: 1 }}
           transition={letterTransition(4)}
           style={{ transformOrigin: "451px 120px" }}
         >
@@ -366,8 +361,7 @@ export default function DifferenceText() {
                   scale: 1.4,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
           transition={letterTransition(5)}
           style={{ transformOrigin: "526px 120px" }}
         >
@@ -404,8 +398,7 @@ export default function DifferenceText() {
                   scale: 1.5,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: 2, scale: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: 2, scale: 1 }}
           transition={letterTransition(6)}
           style={{ transformOrigin: "596px 120px" }}
         >
@@ -441,8 +434,7 @@ export default function DifferenceText() {
                   scale: 1.7,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: -5, scale: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: -5, scale: 1 }}
           transition={letterTransition(7)}
           style={{ transformOrigin: "708px 120px" }}
         >
@@ -485,8 +477,7 @@ export default function DifferenceText() {
                   scale: 1.7,
                 }
           }
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: -4, scale: 1 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0, y: 0, rotate: -4, scale: 1 }}
           transition={letterTransition(8)}
           style={{ transformOrigin: "819px 120px" }}
         >
