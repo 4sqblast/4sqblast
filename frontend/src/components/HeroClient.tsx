@@ -137,7 +137,7 @@ export default function HeroClient({ images }: HeroClientProps) {
           <h1 className="max-w-2xl text-[4rem] font-black leading-[0.88] tracking-[-0.075em] text-[#30204F] sm:text-7xl lg:text-[6.5rem]">
             Faith that
             <br />
-            <span className="blast-pulse-slow relative inline-block text-[#8B51C1]">
+            <span className="blast-pulse relative inline-block text-[#8B51C1]">
               moves.
               <svg
                 viewBox="0 0 290 20"
@@ -290,6 +290,25 @@ export default function HeroClient({ images }: HeroClientProps) {
             friendships and making Jesus known. Come as you are, discover who
             you can become.
           </p>
+
+          {/* Sunday Service Times */}
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 rounded-full border border-[#7045B4]/15 bg-white/70 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+              <span className="size-2 rounded-full bg-[#8B51C1]" />
+              <span className="text-sm font-bold text-[#30204F]">
+                1st Service
+              </span>
+              <span className="text-sm font-black text-[#7045B4]">8:00 AM</span>
+            </div>
+
+            <div className="flex items-center gap-2 rounded-full border border-[#7045B4]/15 bg-white/70 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+              <span className="size-2 rounded-full bg-[#8B51C1]" />
+              <span className="text-sm font-bold text-[#30204F]">
+                2nd Service
+              </span>
+              <span className="text-sm font-black text-[#7045B4]">9:30 AM</span>
+            </div>
+          </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <a

@@ -171,3 +171,19 @@ export type GrowthGroups = {
     } | null;
   } | null;
 };
+
+export type FooterDetails = {
+  page: {
+    acfhomefg: {
+      footerDetails: {
+        address: string;
+        contact: string;
+        email: string;
+        youtube: string;
+        instagram: string;
+        x: string;
+        facebook: string;
+      };
+    } | null;
+  } | null;
+};

@@ -8,6 +8,7 @@ import type {
   Fathers,
   Ministries,
   GrowthGroups,
+  FooterDetails
 } from "./types";
 
 const baseUrl = process.env.WORDPRESS_URL?.trim();
@@ -388,6 +389,15 @@ export function getMinistries(): Promise<Ministries> {
                 }
               }
             }
+            ministry9 {
+              title
+              details
+              image {
+                node {
+                  mediaItemUrl
+                }
+              }
+            }
           }
         }
       }
@@ -448,4 +458,27 @@ export function getGrowthGroups(): Promise<GrowthGroups> {
   `;
 
   return requestWithRetry<GrowthGroups>(query, "GetGrowthGroups");
+}
+
+
+export function getFooterDetails(): Promise<FooterDetails> {
+  const query = gql`
+    query GetFooterDetails {
+      page(id: "/acfhome/", idType: URI) {
+        acfhomefg {
+          footerDetails {
+            address
+            contact
+            email
+            youtube
+            instagram
+            x
+            facebook
+          }
+        }
+      }
+    }
+  `;
+
+  return requestWithRetry<FooterDetails>(query, "GetFooterDetails");
 }
