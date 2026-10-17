@@ -42,7 +42,7 @@ export default function DifferenceText() {
           reducedMotion
             ? { opacity: 0.45, scale: 1 }
             : {
-                opacity: [0.3, 0.65, 0.3],
+                opacity: [0.45, 0.65, 0.45],
                 scale: [0.9, 1.08, 0.9],
               }
         }
@@ -57,7 +57,7 @@ export default function DifferenceText() {
         viewBox="0 0 1000 250"
         role="img"
         aria-labelledby="difference-title"
-        className="blast-pulse-slow relative z-10 block h-auto w-full min-w-0 overflow-visible"
+        className="relative z-10 block h-auto w-full min-w-0 overflow-visible"
       >
         <title id="difference-title">Difference</title>
 
