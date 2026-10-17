@@ -171,6 +171,7 @@ export default function DifferenceText() {
 
         {/* D — rough, expressive brush lettering */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -213,6 +214,7 @@ export default function DifferenceText() {
 
         {/* I — thin orange blade */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -248,6 +250,7 @@ export default function DifferenceText() {
 
         {/* First F — rigid, architectural letter */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -277,6 +280,7 @@ export default function DifferenceText() {
 
         {/* Second F — loud, torn orange paint */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -314,6 +318,7 @@ export default function DifferenceText() {
 
         {/* R — tall, elegant serif */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -350,6 +355,7 @@ export default function DifferenceText() {
 
         {/* E — thin outlined editorial letter */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -387,6 +393,7 @@ export default function DifferenceText() {
 
         {/* N — textured slab */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -423,6 +430,7 @@ export default function DifferenceText() {
 
         {/* C — oversized, curved, expressive */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -466,6 +474,7 @@ export default function DifferenceText() {
 
         {/* Final E — sharp painted exit */}
         <motion.g
+          className="glitch-letter"
           initial={
             reducedMotion
               ? false
@@ -496,6 +505,7 @@ export default function DifferenceText() {
 
         {/* Crown — thin chalk-like outline */}
         <motion.path
+          className="glitch-letter"
           d="M486 29 L484 6 L501 22 L517 0 L516 28 L536 14 L524 37 L488 36 Z"
           fill="none"
           stroke="#F4E7D3"
@@ -512,6 +522,7 @@ export default function DifferenceText() {
 
         {/* Finishing slash accents */}
         <motion.g
+          className="glitch-letter"
           initial={{ opacity: 0, scaleX: 0 }}
           whileInView={{ opacity: 1, scaleX: 1 }}
           viewport={{ once: true }}
