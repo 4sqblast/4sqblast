@@ -277,7 +277,7 @@ export default function ProgrammeCards({ programmes }: Props) {
       // 1. Sneak into the huddle.
       await controls.start("huddle");
       if (cancelled) return;
-      await wait(150);
+      await wait(50);
 
       // 2. Bump and shuffle around.
       await controls.start("chaosA");
@@ -290,14 +290,14 @@ export default function ProgrammeCards({ programmes }: Props) {
 
       await controls.start("chaosC");
       if (cancelled) return;
-      await wait(250);
+      await wait(150);
 
       // 3. They suddenly realise they have been spotted.
       await controls.start("caught");
       if (cancelled) return;
 
       // Hold the awkward freeze so the joke actually lands.
-      await wait(900);
+      await wait(700);
       if (cancelled) return;
 
       // 4. Everyone scrambles back to their own place.
