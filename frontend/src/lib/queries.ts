@@ -8,7 +8,7 @@ import type {
   Fathers,
   Ministries,
   GrowthGroups,
-  FooterDetails
+  FooterDetails,
 } from "./types";
 
 const baseUrl = process.env.WORDPRESS_URL?.trim();
@@ -43,10 +43,15 @@ async function requestWithRetry<T>(
         status !== undefined && [502, 503, 504].includes(status);
 
       if (!isTemporaryServerError || attempt === maxAttempts) {
-        console.error(
-          `[WPGraphQL] ${operationName} failed on attempt ${attempt}/${maxAttempts}.`,
-          error,
-        );
+        console.error(`[WPGraphQL] ${operationName} failed.`, {
+          status:
+            error instanceof ClientError ? error.response.status : undefined,
+          errors:
+            error instanceof ClientError ? error.response.errors : undefined,
+          message: error instanceof Error ? error.message : String(error),
+        });
+
+        throw error;
 
         throw error;
       }
@@ -459,7 +464,6 @@ export function getGrowthGroups(): Promise<GrowthGroups> {
 
   return requestWithRetry<GrowthGroups>(query, "GetGrowthGroups");
 }
-
 
 export function getFooterDetails(): Promise<FooterDetails> {
   const query = gql`
