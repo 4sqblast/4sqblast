@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import DifferenceText from "./DifferenceText";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -162,126 +163,7 @@ export default function HeroClient({ images }: HeroClientProps) {
             >
               <span>People who make a</span>
 
-              <motion.span
-                className="relative mt-2 block w-fit pb-4 font-black tracking-[-0.06em] sm:whitespace-nowrap"
-                initial={
-                  reduceMotion
-                    ? false
-                    : { opacity: 0, y: 22, scale: 0.85, rotate: -3 }
-                }
-                animate={
-                  reduceMotion
-                    ? { opacity: 1 }
-                    : { opacity: 1, y: 0, scale: 1, rotate: 0 }
-                }
-                transition={{
-                  delay: reduceMotion ? 0 : 0.65,
-                  duration: 0.85,
-                  type: "spring",
-                  stiffness: 150,
-                  damping: 11,
-                }}
-              >
-                {/* Fiery red-orange lettering */}
-                <motion.span
-                  className="relative z-10 inline-block bg-gradient-to-r from-[#E12D39] via-[#FF5538] to-[#FF8A36] bg-clip-text text-transparent"
-                  animate={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          filter: [
-                            "drop-shadow(0 0 0px rgba(255,83,56,0))",
-                            "drop-shadow(0 0 9px rgba(255,83,56,0.35))",
-                            "drop-shadow(0 0 0px rgba(255,83,56,0))",
-                          ],
-                        }
-                  }
-                  transition={{
-                    duration: 2.8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  difference.
-                </motion.span>
-
-                {/* Warm orange-red glow */}
-                <motion.span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-1 bottom-3 rounded-full bg-gradient-to-r from-[#FF3D48]/25 via-[#FF7043]/35 to-[#FFB347]/25 blur-xl"
-                  animate={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          opacity: [0.35, 0.85, 0.35],
-                          scaleX: [0.92, 1.04, 0.92],
-                        }
-                  }
-                  transition={{
-                    duration: 2.4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-
-                {/* Jagged lightning underline */}
-                <svg
-                  viewBox="0 0 300 30"
-                  preserveAspectRatio="none"
-                  fill="none"
-                  aria-hidden="true"
-                  className="absolute -bottom-1 left-0 z-20 h-4 w-full overflow-visible"
-                >
-                  <defs>
-                    <linearGradient
-                      id="difference-lightning"
-                      x1="0"
-                      y1="0"
-                      x2="300"
-                      y2="0"
-                    >
-                      <stop offset="0%" stopColor="#E12D39" />
-                      <stop offset="55%" stopColor="#FF5538" />
-                      <stop offset="100%" stopColor="#FFB347" />
-                    </linearGradient>
-                  </defs>
-
-                  <motion.path
-                    d="M2 18 L30 12 L42 17 L75 7 L91 15 L124 10 L145 18 L174 5 L193 13 L224 8 L242 15 L270 5 L298 10"
-                    stroke="url(#difference-lightning)"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    initial={
-                      reduceMotion ? false : { pathLength: 0, opacity: 0 }
-                    }
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{
-                      duration: 0.8,
-                      delay: reduceMotion ? 0 : 1.2,
-                      ease: "easeOut",
-                    }}
-                  />
-
-                  {!reduceMotion && (
-                    <motion.path
-                      d="M2 18 L30 12 L42 17 L75 7 L91 15 L124 10 L145 18 L174 5 L193 13 L224 8 L242 15 L270 5 L298 10"
-                      stroke="#FFB347"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0, 0.9, 0.15, 0.8, 0] }}
-                      transition={{
-                        duration: 1.6,
-                        delay: 1.8,
-                        repeat: Infinity,
-                        repeatDelay: 2.5,
-                      }}
-                    />
-                  )}
-                </svg>
-              </motion.span>
+              <DifferenceText />
             </motion.div>
           </h1>
 
